@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Blog Table ⭐ Cell Design
 // @namespace        http://tampermonkey.net/
-// @version        0.4
+// @version        0.5
 // @description        個別のtable-cellのデザインを指定する「Ctrl+F3」
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventry*
@@ -102,6 +102,24 @@ function main(){
             '13 58 17C53 18 39 20 38 27C37 31 49 29 51 29C67 27 85 32 96 45C102 53 '+
             '104 63 105 72C108 94 105 114 102 136z"/></svg>';
 
+        let SVG_prow=
+            '<svg class="paste_row" viewBox="0 0 279 256">'+
+            '<path style="fill: currentColor;" d="M109 28L11 126C16 133.1 22.9 13'+
+            '8.9 29 145L60 176L91 207C97.1 213.1 102.9 220 110 225L110 153L167 15'+
+            '3L167 225C179.6 216.1 190.1 202.9 201 192L266 127C261 119.9 254.1 11'+
+            '4.1 248 108L217 77L186 46C179.9 39.9 174.1 33 167 28L167 100L110 100'+
+            'L110 51C110 44 111.7 34.4 109 28z"></path>'+
+            '</svg>';
+
+        let SVG_pcol=
+            '<svg class="paste_col" viewBox="0 0 279 256">'+
+            '<path style="fill: currentColor;" d="M139 10L74 75C62.8 86.2 49.1 97'+
+            '.1 40 110L112 110L112 149L40 149C49.1 161.9 62.8 172.8 74 184L139 24'+
+            '9C146.1 244 151.9 237.1 158 231L190 199L221 168C227.1 161.9 234 156.'+
+            '1 239 149L167 149L167 110L239 110C234 102.9 227.1 97.1 221 91L189 59'+
+            'L158 28C151.9 21.9 146.1 15 139 10z"></path>'+
+            '</svg>';
+
 
         let panel=
             '<div id="tcd_panel">'+
@@ -117,10 +135,11 @@ function main(){
             '<div class="tcd_wpx"><input id="cell_fz" type="number" min="6" max="32" value="16"></div>'+
             '<span class="tcd_label">行間隔</span>'+
             '<div class="tcd_wpx"><input id="cell_lh" type="number" min="10" max="40" value="20"></div>'+
-            '<span class="tcd_label">デザイン登録</span>'+
+            '<span class="tcd_label">登録</span>'+
             '<span id="copy_memo">'+ SVG_cm +'</span>'+
             '<span id="paste_memo">'+ SVG_pm +'</span>'+
-            '<span id="paste_wide">◀▶</span>'+
+            '<span id="paste_row">'+ SVG_prow +'</span>'+
+            '<span id="paste_col">'+ SVG_pcol +'</span>'+
             '<span id="tcd_plain">⬜</span>'+
             '<span id="tcd_test"></span>'+
 
@@ -156,11 +175,16 @@ function main(){
 
             '#copy_memo, #paste_memo { margin: 0 4px; }'+
             '#copy_memo:hover, #paste_memo:hover, #tcd_plain:hover { filter: invert(1); }'+
-            '#tcd_panel svg { width: 22px; height: 22px; padding: 2px; border-radius: 3px; '+
+            '#tcd_panel .copy_memo, #tcd_panel .paste_memo { '+
+            'width: 22px; height: 22px; padding: 2px; border-radius: 3px; '+
             'background: #000; vertical-align: -8px; cursor: pointer; }'+
-            '#paste_wide { padding: 4px 2px 1px; margin-left: 20px; border-radius: 3px; '+
+            '#paste_row, #paste_col { padding: 4px 2px 1px; border-radius: 3px; '+
             'color: #fff; background: #2196F3; vertical-align: -1px; cursor: pointer; }'+
-            '#paste_wide:hover { color: #000; background: #fff; }'+
+            '#paste_row { margin-left: 20px; }'+
+            '#paste_col { margin-left: 8px; }'+
+            '#tcd_panel .paste_row, #tcd_panel .paste_col { '+
+            'width: 28px; height: 24px; vertical-align: -6px; cursor: pointer; }'+
+            '#paste_row:hover, #paste_col:hover { color: #000; background: #fff; }'+
             '#tcd_plain { padding: 3px 3px 1px; margin-left: 15px; border: 1px solid #aaa; '+
             'border-radius: 3px; cursor: pointer; }'+
 
@@ -370,7 +394,8 @@ function main(){
         if(task==3){
             pick_color();
             memo_td(td_);
-            paste_wide_td(td_);
+            paste_row_td(td_);
+            paste_col_td(td_);
             back_to_plain(td_);
 
             table_.parentNode.style.overflowY='hidden'; // 高さ減少時のスクロールバーを抑止
@@ -499,9 +524,9 @@ function main(){
 
 
 
-        function paste_wide_td(td_){
-            let paste_wide=document.querySelector('#paste_wide'); // 行全体に設定適用
-            paste_wide.onclick=function(event){
+        function paste_row_td(td_){
+            let paste_row=document.querySelector('#paste_row'); // 行全体に設定適用
+            paste_row.onclick=function(event){
                 let td_style=td_.getAttribute('style');
                 let bg=getComputedStyle(td_).backgroundColor;
 
@@ -516,7 +541,32 @@ function main(){
                         td_all[k].setAttribute('style', td_style); // 変更値の適用
                         td_all[k].style.background=bg; }} // 背景色の適用を追加
 
-            }} //  paste_wide_td()
+            }} //  paste_row_td()
+
+
+
+        function paste_col_td(td_){
+            let paste_col=document.querySelector('#paste_col'); // 列全体に設定適用
+            paste_col.onclick=function(event){
+                let td_style=td_.getAttribute('style');
+                let bg=getComputedStyle(td_).backgroundColor;
+
+                let tr_all=table_.querySelectorAll('tr');
+                let colIndex=td_.cellIndex;
+
+                if(!event.shiftKey){
+                    for(let k=1; k<tr_all.length; k++){
+                        let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
+                        if(col_tr){
+                            col_tr.setAttribute('style', td_style); }}} // 変更値の適用
+                else{
+                    for(let k=1; k<tr_all.length; k++){
+                        let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
+                        if(col_tr){
+                            col_tr.setAttribute('style', td_style); // 変更値の適用
+                            col_tr.style.background=bg; }}} // 背景色の適用を追加
+
+            }} //  paste_col_td()
 
 
 
@@ -664,4 +714,3 @@ function main(){
         }} // before_end(
 
 } // main()
-
