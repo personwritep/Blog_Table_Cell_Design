@@ -120,6 +120,10 @@ function main(){
             'L158 28C151.9 21.9 146.1 15 139 10z"></path>'+
             '</svg>';
 
+        let SVG_plain=
+            '<svg  class="plain" viewBox="0 0 24 16">'+
+            '<rect x="1" y="1" width="22" height="14" fill="none" stroke="black" '+
+            'stroke-width="1" /></svg>';
 
         let panel=
             '<div id="tcd_panel">'+
@@ -140,7 +144,7 @@ function main(){
             '<span id="paste_memo">'+ SVG_pm +'</span>'+
             '<span id="paste_row">'+ SVG_prow +'</span>'+
             '<span id="paste_col">'+ SVG_pcol +'</span>'+
-            '<span id="tcd_plain">⬜</span>'+
+            '<span id="tcd_plain">'+ SVG_plain +'</span>'+
             '<span id="tcd_test"></span>'+
 
             '<div id="tcd_first">'+
@@ -185,8 +189,10 @@ function main(){
             '#tcd_panel .paste_row, #tcd_panel .paste_col { '+
             'width: 28px; height: 24px; vertical-align: -6px; cursor: pointer; }'+
             '#paste_row:hover, #paste_col:hover { color: #000; background: #fff; }'+
-            '#tcd_plain { padding: 3px 3px 1px; margin-left: 15px; border: 1px solid #aaa; '+
-            'border-radius: 3px; cursor: pointer; }'+
+
+            '#tcd_plain .plain { width: 20px; height: 15px; padding: 5px 4px; margin-left: 15px; '+
+            'outline: 1px solid #aaa; border-radius: 2px; background: #fff; vertical-align: -8px; '+
+            'cursor: pointer; }'+
 
             '#tcd_first { position: absolute; top: 0; left: 0; color: #fff; background: #2196f3; '+
             'width: 100%; padding: 10px 0; font-size: 16px; text-align: center; }'+
@@ -230,7 +236,7 @@ function main(){
                     let style_tcd_if=
                         '<style id="style_tcd_if">'+
                         '.tcd_active { box-shadow: #fff -4px 0px, #2196f3 -8px 0px !important; }'+
-                        '.cell_active { outline: 2px solid #2196f3; outline-offset: 4px; }'+
+                        '.cell_active { outline: 2px solid #2196f3; outline-offset: 3px; }'+
                         '</style>';
 
                     if(!iframe_doc.head.querySelector('#style_tcd_if')){
