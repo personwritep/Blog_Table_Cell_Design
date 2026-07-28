@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Blog Table ⭐ Cell Design
 // @namespace        http://tampermonkey.net/
-// @version        0.5
+// @version        0.6
 // @description        個別のtable-cellのデザインを指定する「Ctrl+F3」
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventry*
@@ -38,6 +38,11 @@ function main(){
     if(!btcd_bg){
         btcd_bg='#F4F4F4'; }
     sessionStorage.setItem('BTCD_bg', '#F4F4F4');
+
+
+    let SVG_align_l;
+    let SVG_align_c;
+    let SVG_align_r;
 
 
 
@@ -85,6 +90,73 @@ function main(){
 
     function table_panel(){
 
+        let SVG_bold=
+            '<svg class="bold" viewBox="0 0 256 256">'+
+            '<path style="fill: currentColor;" d="M43 22L43 37C52 37 62 36 65 47C'+
+            '67 52 66 59 66 64L66 95L66 173C66 185 68 200 65 211C62 221 52 221 43'+
+            ' 221L43 235L126 235C147 235 170 235 188 223C213 206 221 164 199 141C'+
+            '186 128 164 123 147 122C162 117 178 115 190 103C211 81 204 42 176 29'+
+            'C159 22 138 22 120 22L43 22M111 115L111 63C111 57 109 47 113 42C115 '+
+            '39 120 39 124 39C134 39 144 40 151 48C155 53 156 60 157 66C159 81 15'+
+            '7 101 143 110C133 116 122 115 111 115M111 132C124 132 139 131 150 13'+
+            '9C164 148 164 164 164 179C164 189 163 200 156 208C149 218 138 218 12'+
+            '6 218C122 218 117 219 114 216C109 210 111 199 111 192L111 132z"></pa'+
+            'th>'+
+            '</svg>';
+
+        SVG_align_l=
+            '<svg class="align_l" viewBox="0 0 256 256">'+
+            '<path style="fill: rgb(0, 0, 0);" d="M24 28.6C11.5 31.8 10.3 51.3 23'+
+            ' 55.3C27 56.6 31.8 56 36 56L59 56L138 56L164 56C168.6 56 173.8 56.5 '+
+            '177.9 53.9C188.1 47.6 184.8 30.2 173 28.2C162.9 26.5 151.3 28 141 28'+
+            'L77 28L42 28C36.3 28 29.6 27.1 24 28.6M23 85.7C11.2 89.7 11 108.4 23'+
+            ' 112.2C31 114.7 41.7 113 50 113L105 113C113.5 113 127.3 115.6 135 11'+
+            '1.5C146.2 105.6 143.3 87.7 131 85.3C123.1 83.8 114 85 106 85L57 85L3'+
+            '5 85C31.1 85 26.7 84.4 23 85.7M24 142.6C11.5 145.8 10.3 165.3 23 169'+
+            '.3C30.6 171.8 41.1 170 49 170L105 170C113.7 170 127 172.4 135 168.4C'+
+            '146.2 162.8 143.3 144.3 131 142.2C123.7 141 115.4 142 108 142L63 142'+
+            'L38 142C33.5 142 28.4 141.4 24 142.6M23 199.7C11.2 203.7 11 222.4 23'+
+            ' 226.2C27.1 227.5 31.8 227 36 227L60 227L139 227L165 227C169.3 227 1'+
+            '74.1 227.5 177.9 225C188.1 218.4 184.8 201.6 173 199.3C162 197.2 149'+
+            '.2 199 138 199L69 199L38 199C33.3 199 27.5 198.2 23 199.7z"></path>'+
+            '</svg>';
+
+        SVG_align_c=
+            '<svg class="align_c" viewBox="0 0 256 256">'+
+            '<path style="fill: rgb(0, 0, 0);" d="M53 28.6C40.5 31.8 39.3 51.3 52'+
+            ' 55.3C56 56.6 60.8 56 65 56L88 56L167 56L193 56C197.6 56 202.8 56.5 '+
+            '206.9 53.9C217.1 47.6 213.8 30.2 202 28.2C191.9 26.5 180.3 28 170 28'+
+            'L106 28L71 28C65.3 28 58.6 27.1 53 28.6M72 85.7C60.2 89.7 60 108.4 7'+
+            '2 112.2C80 114.7 90.7 113 99 113L154 113C162.5 113 176.3 115.6 184 1'+
+            '11.5C195.2 105.6 192.3 87.7 180 85.3C172.1 83.8 163 85 155 85L106 85'+
+            'L84 85C80.1 85 75.7 84.4 72 85.7M73 142.6C60.5 145.8 59.3 165.3 72 1'+
+            '69.3C79.6 171.8 90.1 170 98 170L154 170C162.7 170 176 172.4 184 168.'+
+            '4C195.2 162.8 192.3 144.3 180 142.2C172.7 141 164.4 142 157 142L112 '+
+            '142L87 142C82.5 142 77.4 141.4 73 142.6M52 199.7C40.2 203.7 40 222.4'+
+            ' 52 226.2C56.1 227.5 60.8 227 65 227L89 227L168 227L194 227C198.3 22'+
+            '7 203.1 227.5 206.9 225C217.1 218.4 213.8 201.6 202 199.3C191 197.2 '+
+            '178.2 199 167 199L98 199L67 199C62.3 199 56.5 198.2 52 199.7z"></pat'+
+            'h>'+
+            '</svg>';
+
+        SVG_align_r=
+            '<svg class="align_r" viewBox="0 0 256 256">'+
+            '<path style="fill: rgb(0, 0, 0);" d="M81 28.6C68.5 31.8 67.3 51.3 80'+
+            ' 55.3C84 56.6 88.8 56 93 56L116 56L195 56L221 56C225.6 56 230.8 56.5'+
+            ' 234.9 53.9C245.1 47.6 241.8 30.2 230 28.2C219.9 26.5 208.3 28 198 2'+
+            '8L134 28L99 28C93.3 28 86.6 27.1 81 28.6M122 85.7C110.2 89.7 110 108'+
+            '.4 122 112.2C130 114.7 140.7 113 149 113L204 113C212.5 113 226.3 115'+
+            '.6 234 111.5C245.2 105.6 242.3 87.7 230 85.3C222.1 83.8 213 85 205 8'+
+            '5L156 85L134 85C130.1 85 125.7 84.4 122 85.7M123 142.6C110.5 145.8 1'+
+            '09.3 165.3 122 169.3C129.6 171.8 140.1 170 148 170L204 170C212.7 170'+
+            ' 226 172.4 234 168.4C245.2 162.8 242.3 144.3 230 142.2C222.7 141 214'+
+            '.4 142 207 142L162 142L137 142C132.5 142 127.4 141.4 123 142.6M80 19'+
+            '9.7C68.2 203.7 68 222.4 80 226.2C84.1 227.5 88.8 227 93 227L117 227L'+
+            '196 227L222 227C226.3 227 231.1 227.5 234.9 225C245.1 218.4 241.8 20'+
+            '1.6 230 199.3C219 197.2 206.2 199 195 199L126 199L95 199C90.3 199 84'+
+            '.5 198.2 80 199.7z"></path>'+
+            '</svg>';
+
         let SVG_cm=
             '<svg class="copy_memo" viewBox="-45 -20 540 540">'+
             '<path fill="#fff" d="M416 208H272V64c0-18-14-32-32-32h-32c-18 '+
@@ -129,16 +201,20 @@ function main(){
             '<div id="tcd_panel">'+
             '<span class="tcd_label">背景色</span>'+
             '<input id="cell_bg" type="text" autocomplete="off">'+
-            '<span class="tcd_label">Padding 上</span>'+
-            '<div class="tcd_wpx"><input id="padd_t" type="number" min="0" max="40" value="2"></div>'+
-            '<span class="tcd_label">左右</span>'+
-            '<div class="tcd_wpx"><input id="padd_lr" type="number" min="0" max="40" value="6"></div>'+
-            '<span class="tcd_label">下</span>'+
+            '<span class="tcd_label">Padding </span>'+
+            '<div class="tcd_wpx pad"><input id="padd_t" type="number" min="0" max="40" value="2"></div>'+
+            '<span class="tcd_label"></span>'+
+            '<div class="tcd_wpx pad"><input id="padd_lr" type="number" min="0" max="40" value="6"></div>'+
+            '<span class="tcd_label"></span>'+
             '<div class="tcd_wpx"><input id="padd_b" type="number" min="0" max="40" value="0"></div>'+
             '<span class="tcd_label">文字サイズ</span>'+
             '<div class="tcd_wpx"><input id="cell_fz" type="number" min="6" max="32" value="16"></div>'+
             '<span class="tcd_label">行間隔</span>'+
             '<div class="tcd_wpx"><input id="cell_lh" type="number" min="10" max="40" value="20"></div>'+
+            '<span class="tcd_label">太字</span>'+
+            '<span id="bold">'+ SVG_bold +'</span>'+
+            '<span class="tcd_label">配置</span>'+
+            '<span id="align">'+ SVG_align_l +'</span>'+
             '<span class="tcd_label">登録</span>'+
             '<span id="copy_memo">'+ SVG_cm +'</span>'+
             '<span id="paste_memo">'+ SVG_pm +'</span>'+
@@ -165,10 +241,11 @@ function main(){
             '{ box-shadow: none; }'+
             '.tcd_label { margin: 0 3px 0 0; }'+
 
-            '#padd_t, #padd_lr, #padd_b, #cell_fz, #cell_lh { width: 50px; text-align: center; }'+
+            '#padd_t, #padd_lr, #padd_b, #cell_fz, #cell_lh { width: 44px; text-align: center; }'+
 
             '.tcd_wpx { position: relative; display: inline-block; }'+
             '.tcd_wpx { margin-right: 10px; }'+
+            '.tcd_wpx.pad { margin-right: 0; }'+
             '.tcd_wpx::after { content: "px"; }'+
             '.tcd_wpx::after { position: absolute; right: 2px; top: 2px; '+
             'padding: 3px 0 0; width: 17px; background: #fff; }'+
@@ -177,14 +254,21 @@ function main(){
             '#cell_bg { width: 100px; padding: 2px 0 0 22px; cursor: pointer; }'+
             '#cell_bg:focus { cursor: text; }'+
 
+            '#bold, #align { margin: 0 10px 0 0; }'+
             '#copy_memo, #paste_memo { margin: 0 4px; }'+
-            '#copy_memo:hover, #paste_memo:hover, #tcd_plain:hover { filter: invert(1); }'+
+            '#bold:hover, #align:hover, #copy_memo:hover, #paste_memo:hover, '+
+            '#tcd_plain:hover { filter: invert(1); }'+
+
+            '#tcd_panel .align_l, #tcd_panel .align_c, #tcd_panel .align_r, #tcd_panel .bold { '+
+            'width: 22px; height: 22px; padding: 2px; outline: 1px solid #aaa; border-radius: 2px; '+
+            'background: #fff; vertical-align: -8px; cursor: pointer; }'+
             '#tcd_panel .copy_memo, #tcd_panel .paste_memo { '+
             'width: 22px; height: 22px; padding: 2px; border-radius: 3px; '+
             'background: #000; vertical-align: -8px; cursor: pointer; }'+
+
             '#paste_row, #paste_col { padding: 4px 2px 1px; border-radius: 3px; '+
             'color: #fff; background: #2196F3; vertical-align: -1px; cursor: pointer; }'+
-            '#paste_row { margin-left: 20px; }'+
+            '#paste_row { margin-left: 15px; }'+
             '#paste_col { margin-left: 8px; }'+
             '#tcd_panel .paste_row, #tcd_panel .paste_col { '+
             'width: 28px; height: 24px; vertical-align: -6px; cursor: pointer; }'+
@@ -394,6 +478,8 @@ function main(){
         let padd_b=document.querySelector('#padd_b'); // padding-bottom
         let cell_fz=document.querySelector('#cell_fz'); // 文字サイズ
         let cell_lh=document.querySelector('#cell_lh'); // 行間隔
+        let bold=document.querySelector('#bold'); // ボールド
+        let align=document.querySelector('#align'); // 配置
         let copy_memo=document.querySelector('#copy_memo'); // コピーボタン
         let paste_memo=document.querySelector('#paste_memo'); // ペーストボタン
 
@@ -405,6 +491,7 @@ function main(){
             back_to_plain(td_);
 
             table_.parentNode.style.overflowY='hidden'; // 高さ減少時のスクロールバーを抑止
+
 
 
             let bg=getComputedStyle(td_).backgroundColor;
@@ -422,6 +509,7 @@ function main(){
                         td_.style.backgroundColor=''; }}}
 
 
+
             let pt=getComputedStyle(td_).paddingTop;
             pt=pt.replace('px', '');
             padd_t.value=Math.round(pt);
@@ -435,6 +523,7 @@ function main(){
                         td_.style.paddingTop=padd_t.value +'px'; }
                     else{
                         td_.style.paddingTop=''; }}}
+
 
 
             let plr=getComputedStyle(td_).paddingLeft;
@@ -454,6 +543,7 @@ function main(){
                         td_.style.paddingRight=''; }}}
 
 
+
             let pb=getComputedStyle(td_).paddingBottom;
             pb=pb.replace('px', '');
             padd_b.value=Math.round(pb);
@@ -469,6 +559,7 @@ function main(){
                         td_.style.paddingBottom=''; }}}
 
 
+
             let fz=getComputedStyle(td_).fontSize;
             fz=fz.replace('px', '');
             cell_fz.value=Math.round(fz);
@@ -482,6 +573,7 @@ function main(){
                         td_.style.fontSize=cell_fz.value +'px'; }
                     else{
                         td_.style.fontSize=''; }}}
+
 
 
             let lh=getComputedStyle(td_).lineHeight;
@@ -503,6 +595,51 @@ function main(){
                         td_.style.lineHeight=cell_lh.value +'px'; }
                     else{
                         td_.style.lineHeight=''; }}}
+
+
+
+            let t_bold=getComputedStyle(td_).fontWeight;
+            if(t_bold==400){
+                bold.style.color='#aaa'; }
+            else{
+                bold.style.color='#000'; }
+
+            bold.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                t_bold=getComputedStyle(td_).fontWeight;
+                if(event.altKey){
+                    if(t_bold==400){
+                        td_.style.fontWeight='bold';
+                        bold.style.color='#000'; }
+                    else{
+                        td_.style.fontWeight='';
+                        bold.style.color='#aaa'; }}}
+
+
+
+            let t_align=getComputedStyle(td_).textAlign;
+            if(t_align=='start' || t_align=='left'){
+                align.innerHTML=SVG_align_l; }
+            else if(t_align=='center'){
+                align.innerHTML=SVG_align_c; }
+            else if(t_align=='end' || t_align=='right'){
+                align.innerHTML=SVG_align_r; }
+
+            align.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                t_align=getComputedStyle(td_).textAlign;
+                if(event.altKey){
+                    if(t_align=='start' || t_align=='left'){
+                        td_.style.textAlign='center';
+                        align.innerHTML=SVG_align_c; }
+                    else if(t_align=='center'){
+                        td_.style.textAlign='right';
+                        align.innerHTML=SVG_align_r; }
+                    else if(t_align=='end' || t_align=='right'){
+                        td_.style.textAlign='left';
+                        align.innerHTML=SVG_align_l; }}}
 
         } // if(task==3)
 
