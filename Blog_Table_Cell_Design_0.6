@@ -678,11 +678,13 @@ function main(){
 
                 if(!event.shiftKey){
                     for(let k=0; k<td_all.length; k++){
-                        td_all[k].setAttribute('style', td_style); }} // 変更値の適用
+                        if(join_safe(td_all[k])){ // 結合セルでない条件
+                            td_all[k].setAttribute('style', td_style); }}} // 変更値の適用
                 else{
                     for(let k=0; k<td_all.length; k++){
-                        td_all[k].setAttribute('style', td_style); // 変更値の適用
-                        td_all[k].style.background=bg; }} // 背景色の適用を追加
+                        if(join_safe(td_all[k])){ // 結合セルでない条件
+                            td_all[k].setAttribute('style', td_style); // 変更値の適用
+                            td_all[k].style.background=bg; }}} // 背景色の適用を追加
 
             }} //  paste_row_td()
 
@@ -701,13 +703,15 @@ function main(){
                     for(let k=1; k<tr_all.length; k++){
                         let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
                         if(col_tr){
-                            col_tr.setAttribute('style', td_style); }}} // 変更値の適用
+                            if(join_safe(col_tr)){ // 結合セルでない条件
+                                col_tr.setAttribute('style', td_style); }}}} // 変更値の適用
                 else{
                     for(let k=1; k<tr_all.length; k++){
                         let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
                         if(col_tr){
-                            col_tr.setAttribute('style', td_style); // 変更値の適用
-                            col_tr.style.background=bg; }}} // 背景色の適用を追加
+                            if(join_safe(col_tr)){ // 結合セルでない条件
+                                col_tr.setAttribute('style', td_style); // 変更値の適用
+                                col_tr.style.background=bg; }}}} // 背景色の適用を追加
 
             }} //  paste_col_td()
 
@@ -717,6 +721,12 @@ function main(){
             let tcd_plain=document.querySelector('#tcd_plain');
             tcd_plain.onclick=function(){
                 td_.removeAttribute('style'); }}
+
+
+
+        function join_safe(cell){ // 結合セルの非表示セルに style属性適用を抑止する
+            if(cell && getComputedStyle(cell).display!=='none'){
+                return true; }}
 
     } // edit_table()
 
