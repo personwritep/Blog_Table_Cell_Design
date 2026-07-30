@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Blog Table ⭐ Cell Design
 // @namespace        http://tampermonkey.net/
-// @version        0.6
+// @version        0.7
 // @description        個別のtable-cellのデザインを指定する「Ctrl+F3」
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventry*
@@ -39,11 +39,15 @@ function main(){
         btcd_bg='#F4F4F4'; }
     sessionStorage.setItem('BTCD_bg', '#F4F4F4');
 
-
+    let SVG_bold;
     let SVG_align_l;
     let SVG_align_c;
     let SVG_align_r;
-
+    let SVG_cm;
+    let SVG_pm;
+    let SVG_prow;
+    let SVG_pcol;
+    let SVG_plain;
 
 
     let target=document.getElementById('cke_1_contents'); // 監視 target
@@ -90,8 +94,8 @@ function main(){
 
     function table_panel(){
 
-        let SVG_bold=
-            '<svg class="bold" viewBox="0 0 256 256">'+
+        SVG_bold=
+            '<svg viewBox="0 0 256 256">'+
             '<path style="fill: currentColor;" d="M43 22L43 37C52 37 62 36 65 47C'+
             '67 52 66 59 66 64L66 95L66 173C66 185 68 200 65 211C62 221 52 221 43'+
             ' 221L43 235L126 235C147 235 170 235 188 223C213 206 221 164 199 141C'+
@@ -105,7 +109,7 @@ function main(){
             '</svg>';
 
         SVG_align_l=
-            '<svg class="align_l" viewBox="0 0 256 256">'+
+            '<svg viewBox="0 0 256 256">'+
             '<path style="fill: rgb(0, 0, 0);" d="M24 28.6C11.5 31.8 10.3 51.3 23'+
             ' 55.3C27 56.6 31.8 56 36 56L59 56L138 56L164 56C168.6 56 173.8 56.5 '+
             '177.9 53.9C188.1 47.6 184.8 30.2 173 28.2C162.9 26.5 151.3 28 141 28'+
@@ -122,7 +126,7 @@ function main(){
             '</svg>';
 
         SVG_align_c=
-            '<svg class="align_c" viewBox="0 0 256 256">'+
+            '<svg viewBox="0 0 256 256">'+
             '<path style="fill: rgb(0, 0, 0);" d="M53 28.6C40.5 31.8 39.3 51.3 52'+
             ' 55.3C56 56.6 60.8 56 65 56L88 56L167 56L193 56C197.6 56 202.8 56.5 '+
             '206.9 53.9C217.1 47.6 213.8 30.2 202 28.2C191.9 26.5 180.3 28 170 28'+
@@ -140,7 +144,7 @@ function main(){
             '</svg>';
 
         SVG_align_r=
-            '<svg class="align_r" viewBox="0 0 256 256">'+
+            '<svg viewBox="0 0 256 256">'+
             '<path style="fill: rgb(0, 0, 0);" d="M81 28.6C68.5 31.8 67.3 51.3 80'+
             ' 55.3C84 56.6 88.8 56 93 56L116 56L195 56L221 56C225.6 56 230.8 56.5'+
             ' 234.9 53.9C245.1 47.6 241.8 30.2 230 28.2C219.9 26.5 208.3 28 198 2'+
@@ -157,15 +161,15 @@ function main(){
             '.5 198.2 80 199.7z"></path>'+
             '</svg>';
 
-        let SVG_cm=
-            '<svg class="copy_memo" viewBox="-45 -20 540 540">'+
+        SVG_cm=
+            '<svg viewBox="-45 -20 540 540">'+
             '<path fill="#fff" d="M416 208H272V64c0-18-14-32-32-32h-32c-18 '+
             '0-32 14-32 32v144H32c-18 0-32 14-32 32v32c0 18 14 32 32 32h144v '+
             '144c0 18 14 32 32 32h32c18 0 32-14 32-32V304h144c18 0 32-14 '+
             '32-32v-32c0-18-14-32-32-32z"></path></svg>';
 
-        let SVG_pm=
-            '<svg class="paste_memo" viewBox="0 -10 256 256">'+
+        SVG_pm=
+            '<svg viewBox="0 -10 256 256">'+
             '<path style="fill:#fff" d="M102 136L72 136C67 136 61 136 58 141C54 148 '+
             '59 153 63 158C72 169 82 180 91 191C100 201 109 212 118 222C122 226 '+
             '126 232 132 232C138 232 142 226 146 222C155 211 164 201 173 190C182 '+
@@ -174,8 +178,8 @@ function main(){
             '13 58 17C53 18 39 20 38 27C37 31 49 29 51 29C67 27 85 32 96 45C102 53 '+
             '104 63 105 72C108 94 105 114 102 136z"/></svg>';
 
-        let SVG_prow=
-            '<svg class="paste_row" viewBox="0 0 279 256">'+
+        SVG_prow=
+            '<svg viewBox="0 0 279 256">'+
             '<path style="fill: currentColor;" d="M109 28L11 126C16 133.1 22.9 13'+
             '8.9 29 145L60 176L91 207C97.1 213.1 102.9 220 110 225L110 153L167 15'+
             '3L167 225C179.6 216.1 190.1 202.9 201 192L266 127C261 119.9 254.1 11'+
@@ -183,8 +187,8 @@ function main(){
             'L110 51C110 44 111.7 34.4 109 28z"></path>'+
             '</svg>';
 
-        let SVG_pcol=
-            '<svg class="paste_col" viewBox="0 0 279 256">'+
+        SVG_pcol=
+            '<svg viewBox="0 0 279 256">'+
             '<path style="fill: currentColor;" d="M139 10L74 75C62.8 86.2 49.1 97'+
             '.1 40 110L112 110L112 149L40 149C49.1 161.9 62.8 172.8 74 184L139 24'+
             '9C146.1 244 151.9 237.1 158 231L190 199L221 168C227.1 161.9 234 156.'+
@@ -192,8 +196,8 @@ function main(){
             'L158 28C151.9 21.9 146.1 15 139 10z"></path>'+
             '</svg>';
 
-        let SVG_plain=
-            '<svg  class="plain" viewBox="0 0 24 16">'+
+        SVG_plain=
+            '<svg viewBox="0 0 24 16">'+
             '<rect x="1" y="1" width="22" height="14" fill="none" stroke="black" '+
             'stroke-width="1" /></svg>';
 
@@ -234,15 +238,13 @@ function main(){
             'font-size: 14px; padding: 6px 12px; overflow: hidden; '+
             'border: 1px solid #ccc; border-radius: 4px; background: #eff5f6; z-index: 10; }'+
             '#tcd_panel * { user-select: none; }'+
+
             '#tcd_panel input { position: relative; margin-right: 10px; padding-top: 2px; '+
             'height: 27px; box-sizing: border-box; border: thin solid #aaa; }'+
             '#tcd_panel input[type="number"] { padding-right: 2px; margin-right: 0; }'+
             '#tcd_panel input[type="number"]:focus, #tcd_panel input[type="submit"]:focus '+
             '{ box-shadow: none; }'+
             '.tcd_label { margin: 0 3px 0 0; }'+
-
-            '#padd_t, #padd_lr, #padd_b, #cell_fz, #cell_lh { width: 44px; text-align: center; }'+
-
             '.tcd_wpx { position: relative; display: inline-block; }'+
             '.tcd_wpx { margin-right: 10px; }'+
             '.tcd_wpx.pad { margin-right: 0; }'+
@@ -254,29 +256,33 @@ function main(){
             '#cell_bg { width: 100px; padding: 2px 0 0 22px; cursor: pointer; }'+
             '#cell_bg:focus { cursor: text; }'+
 
+            '#padd_t, #padd_lr, #padd_b, #cell_fz, #cell_lh { width: 44px; text-align: center; }'+
+
             '#bold, #align { margin: 0 10px 0 0; }'+
+            '#bold svg, #align svg { '+
+            'width: 22px; height: 22px; padding: 2px; outline: 1px solid #aaa; '+
+            'border-radius: 2px; background: #fff; vertical-align: -8px; cursor: pointer; }'+
+
             '#copy_memo, #paste_memo { margin: 0 4px; }'+
-            '#bold:hover, #align:hover, #copy_memo:hover, #paste_memo:hover, '+
-            '#tcd_plain:hover { filter: invert(1); }'+
+            '#copy_memo svg, #paste_memo svg { '+
+            'width: 22px; height: 22px; padding: 2px; outline: 1px solid #aaa; '+
+            'border-radius: 3px; background: #000; vertical-align: -8px; cursor: pointer; }'+
 
-            '#tcd_panel .align_l, #tcd_panel .align_c, #tcd_panel .align_r, #tcd_panel .bold { '+
-            'width: 22px; height: 22px; padding: 2px; outline: 1px solid #aaa; border-radius: 2px; '+
-            'background: #fff; vertical-align: -8px; cursor: pointer; }'+
-            '#tcd_panel .copy_memo, #tcd_panel .paste_memo { '+
-            'width: 22px; height: 22px; padding: 2px; border-radius: 3px; '+
-            'background: #000; vertical-align: -8px; cursor: pointer; }'+
-
-            '#paste_row, #paste_col { padding: 4px 2px 1px; border-radius: 3px; '+
-            'color: #fff; background: #2196F3; vertical-align: -1px; cursor: pointer; }'+
+            '#paste_row, #paste_col { padding: 3px 2px 2px; outline: 1px solid #aaa; '+
+            'border-radius: 3px; color: #fff; background: #2196F3; cursor: pointer; }'+
             '#paste_row { margin-left: 15px; }'+
             '#paste_col { margin-left: 8px; }'+
-            '#tcd_panel .paste_row, #tcd_panel .paste_col { '+
-            'width: 28px; height: 24px; vertical-align: -6px; cursor: pointer; }'+
+            '#paste_row svg, #paste_col svg { '+
+            'width: 28px; height: 24px; vertical-align: -7px; cursor: pointer; }'+
             '#paste_row:hover, #paste_col:hover { color: #000; background: #fff; }'+
 
-            '#tcd_plain .plain { width: 20px; height: 15px; padding: 5px 4px; margin-left: 15px; '+
-            'outline: 1px solid #aaa; border-radius: 2px; background: #fff; vertical-align: -8px; '+
-            'cursor: pointer; }'+
+            '#tcd_plain { margin: 0 -10px 0 15px; }'+
+            '#tcd_plain svg { '+
+            'width: 20px; height: 16px; padding: 5px 4px; outline: 1px solid #aaa; '+
+            'border-radius: 2px; background: #fff; vertical-align: -8px; cursor: pointer; }'+
+
+            '#bold:hover, #align:hover, #copy_memo:hover, #paste_memo:hover, '+
+            '#tcd_plain:hover { filter: invert(1); }'+
 
             '#tcd_first { position: absolute; top: 0; left: 0; color: #fff; background: #2196f3; '+
             'width: 100%; padding: 10px 0; font-size: 16px; text-align: center; }'+
@@ -353,7 +359,388 @@ function main(){
 
 
 
-    function pick_color(){
+    function edit_table(table_, td_){
+        let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
+        let iframe_doc=editor_iframe.contentWindow.document;
+
+        let color_input=document.querySelector('#cell_bg'); // 背景色
+        let padd_t=document.querySelector('#padd_t'); // padding-top
+        let padd_lr=document.querySelector('#padd_lr'); // padding-left/right
+        let padd_b=document.querySelector('#padd_b'); // padding-bottom
+        let cell_fz=document.querySelector('#cell_fz'); // 文字サイズ
+        let cell_lh=document.querySelector('#cell_lh'); // 行間隔
+        let bold=document.querySelector('#bold'); // ボールド
+        let align=document.querySelector('#align'); // 配置
+        let copy_memo=document.querySelector('#copy_memo'); // コピーボタン
+        let paste_memo=document.querySelector('#paste_memo'); // ペーストボタン
+
+        if(task==3){
+            pick_color(td_);
+            memo_td(td_);
+            paste_row_td(td_);
+            paste_col_td(td_);
+            back_to_plain(td_);
+
+            table_.parentNode.style.overflowY='hidden'; // 高さ減少時のスクロールバーを抑止
+
+
+
+            let bg=getComputedStyle(td_).backgroundColor;
+            color_input.value=rgb_hex(bg);
+            sticky_color(color_input);
+            let default_color=color_input.value;
+
+            color_input.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if(!event.shftKey && !event.ctrlKey){
+                    if(color_input.value!=default_color){
+                        td_.style.background=color_input.value; }
+                    else{ ; }}}
+
+
+
+            let pt=getComputedStyle(td_).paddingTop;
+            pt=pt.replace('px', '');
+            padd_t.value=Math.round(pt);
+            let default_pt=padd_t.value;
+
+            padd_t.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if(!event.shftKey && !event.ctrlKey){
+                    if(padd_t.value!=default_pt){
+                        td_.style.paddingTop=padd_t.value +'px'; }
+                    else{
+                        td_.style.paddingTop='';
+                        clear_style(td_); }}}
+
+
+
+            let plr=getComputedStyle(td_).paddingLeft;
+            plr=plr.replace('px', '');
+            padd_lr.value=Math.round(plr);
+            let default_plr=padd_lr.value;
+
+            padd_lr.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if(!event.shftKey && !event.ctrlKey){
+                    if(padd_lr.value!=default_plr){
+                        td_.style.paddingLeft=padd_lr.value +'px';
+                        td_.style.paddingRight=padd_lr.value +'px'; }
+                    else{
+                        td_.style.paddingLeft='';
+                        td_.style.paddingRight='';
+                        clear_style(td_); }}}
+
+
+
+            let pb=getComputedStyle(td_).paddingBottom;
+            pb=pb.replace('px', '');
+            padd_b.value=Math.round(pb);
+            let default_pb=padd_b.value;
+
+            padd_b.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if(!event.shftKey && !event.ctrlKey){
+                    if(padd_b.value!=default_pb){
+                        td_.style.paddingBottom=padd_b.value +'px'; }
+                    else{
+                        td_.style.paddingBottom='';
+                        clear_style(td_); }}}
+
+
+
+            let fz=getComputedStyle(td_).fontSize;
+            fz=fz.replace('px', '');
+            cell_fz.value=Math.round(fz);
+            let default_fz=cell_fz.value;
+
+            cell_fz.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if(!event.shftKey && !event.ctrlKey){
+                    if(cell_fz.value!=default_fz){
+                        td_.style.fontSize=cell_fz.value +'px'; }
+                    else{
+                        td_.style.fontSize='';
+                        clear_style(td_); }}}
+
+
+
+            let lh=getComputedStyle(td_).lineHeight;
+            if(lh=='normal'){
+                lh=fz*(1.5); }
+            else if(lh.indexOf('em')!=-1){
+                lh=lh.replace('em', '');
+                lh=lh*fz; }
+            else if(lh.indexOf('px')!=-1){
+                lh=lh.replace('px', ''); }
+            cell_lh.value=Math.round(lh);
+            let default_lh=cell_lh.value;
+
+            cell_lh.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if(!event.shftKey && !event.ctrlKey){
+                    if(cell_lh.value!=default_lh){
+                        td_.style.lineHeight=cell_lh.value +'px'; }
+                    else{
+                        td_.style.lineHeight='';
+                        clear_style(td_); }}}
+
+
+
+            let t_bold=getComputedStyle(td_).fontWeight;
+            if(t_bold==400){
+                bold.style.color='#aaa'; }
+            else{
+                bold.style.color='#000'; }
+
+            bold.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                t_bold=getComputedStyle(td_).fontWeight;
+                if(!event.shftKey && !event.ctrlKey){
+                    if(t_bold==400){
+                        td_.style.fontWeight='bold';
+                        bold.style.color='#000'; }
+                    else{
+                        td_.style.fontWeight='';
+                        clear_style(td_);
+                        bold.style.color='#aaa'; }}}
+
+
+
+            let t_align=getComputedStyle(td_).textAlign;
+            if(t_align=='start' || t_align=='left'){
+                align.innerHTML=SVG_align_l; }
+            else if(t_align=='center'){
+                align.innerHTML=SVG_align_c; }
+            else if(t_align=='end' || t_align=='right'){
+                align.innerHTML=SVG_align_r; }
+
+            align.onclick=function(event){
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                t_align=getComputedStyle(td_).textAlign;
+                if(!event.shftKey && !event.ctrlKey){
+                    if(t_align=='start' || t_align=='left'){
+                        td_.style.textAlign='center';
+                        align.innerHTML=SVG_align_c; }
+                    else if(t_align=='center'){
+                        td_.style.textAlign='right';
+                        align.innerHTML=SVG_align_r; }
+                    else if(t_align=='end' || t_align=='right'){
+                        td_.style.textAlign='';
+                        clear_style(td_);
+                        align.innerHTML=SVG_align_l; }}}
+
+        } // if(task==3)
+
+
+
+        function memo_td(td_){
+            copy_memo.onclick=function(){
+                let yes=window.confirm(
+                    "　🔵 選択したセルの設定をコピーします");
+                if(yes){
+                    let td_style=td_.getAttribute('style');
+                    sessionStorage.setItem('BTCD_style', td_style);
+                    sessionStorage.setItem('BTCD_bg', color_input.value);
+                }} // ストレージ 保存
+
+            paste_memo.onclick=function(event){
+                if(!event.shiftKey){ // 変更値のみ適用
+                    td_.setAttribute('style', sessionStorage.getItem('BTCD_style')); }
+                else{
+                    td_.setAttribute('style', sessionStorage.getItem('BTCD_style'));
+                    color_input.value=sessionStorage.getItem('BTCD_bg');
+                    sticky_color(color_input);
+                    td_.style.background=color_input.value; }} // 背景色の適用を追加
+
+        } // memo_td()
+
+
+
+        function paste_row_td(td_){
+            let paste_row=document.querySelector('#paste_row'); // 行全体に設定適用
+            paste_row.onclick=function(event){
+                let td_style=td_.getAttribute('style');
+                let bg=getComputedStyle(td_).backgroundColor;
+
+                let td_tr=td_.closest('tr');
+                let td_all=td_tr.querySelectorAll('td');
+
+                if(!event.shiftKey){
+                    for(let k=0; k<td_all.length; k++){
+                        if(join_safe(td_all[k])){ // 結合セルでない条件
+                            if(!td_style){
+                                td_all[k].removeAttribute('style'); }
+                            else{
+                                td_all[k].setAttribute('style', td_style); }}}} // 変更値の適用
+                else{
+                    for(let k=0; k<td_all.length; k++){
+                        if(join_safe(td_all[k])){ // 結合セルでない条件
+                            td_all[k].setAttribute('style', td_style); // 変更値の適用
+                            td_all[k].style.background=bg; }}} // 背景色の適用を追加
+
+            }} //  paste_row_td()
+
+
+
+        function paste_col_td(td_){
+            let paste_col=document.querySelector('#paste_col'); // 列全体に設定適用
+            paste_col.onclick=function(event){
+                let td_style=td_.getAttribute('style');
+                let bg=getComputedStyle(td_).backgroundColor;
+
+                let tr_all=table_.querySelectorAll('tr');
+                let colIndex=td_.cellIndex;
+
+                if(!event.shiftKey){
+                    for(let k=1; k<tr_all.length; k++){ // k=0 は theadを壊すので省く
+                        let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
+                        if(col_tr){
+                            if(join_safe(col_tr)){ // 結合セルでない条件
+                                if(!td_style){
+                                    col_tr.removeAttribute('style'); }
+                                else{
+                                    col_tr.setAttribute('style', td_style); }}}}} // 変更値の適用
+                else{
+                    for(let k=1; k<tr_all.length; k++){ // k=0 は theadを壊すので省く
+                        let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
+                        if(col_tr){
+                            if(join_safe(col_tr)){ // 結合セルでない条件
+                                col_tr.setAttribute('style', td_style); // 変更値の適用
+                                col_tr.style.background=bg; }}}} // 背景色の適用を追加
+
+            }} //  paste_col_td()
+
+
+
+        function back_to_plain(td_){
+            let tcd_plain=document.querySelector('#tcd_plain');
+            tcd_plain.onclick=function(){
+                td_.removeAttribute('style');
+
+                let bg=getComputedStyle(td_).backgroundColor;
+                color_input.value=rgb_hex(bg);
+                sticky_color(color_input);
+
+                let pt=getComputedStyle(td_).paddingTop;
+                pt=pt.replace('px', '');
+                padd_t.value=Math.round(pt);
+
+                let plr=getComputedStyle(td_).paddingLeft;
+                plr=plr.replace('px', '');
+                padd_lr.value=Math.round(plr);
+
+                let pb=getComputedStyle(td_).paddingBottom;
+                pb=pb.replace('px', '');
+                padd_b.value=Math.round(pb);
+
+                let fz=getComputedStyle(td_).fontSize;
+                fz=fz.replace('px', '');
+                cell_fz.value=Math.round(fz);
+
+                let lh=getComputedStyle(td_).lineHeight;
+                if(lh=='normal'){
+                    lh=fz*(1.5); }
+                else if(lh.indexOf('em')!=-1){
+                    lh=lh.replace('em', '');
+                    lh=lh*fz; }
+                else if(lh.indexOf('px')!=-1){
+                    lh=lh.replace('px', ''); }
+                cell_lh.value=Math.round(lh);
+
+                let t_bold=getComputedStyle(td_).fontWeight;
+                if(t_bold==400){
+                    bold.style.color='#aaa'; }
+                else{
+                    bold.style.color='#000'; }
+
+                let t_align=getComputedStyle(td_).textAlign;
+                if(t_align=='start' || t_align=='left'){
+                    align.innerHTML=SVG_align_l; }
+                else if(t_align=='center'){
+                    align.innerHTML=SVG_align_c; }
+                else if(t_align=='end' || t_align=='right'){
+                    align.innerHTML=SVG_align_r; }
+
+            }} // back_to_plain()
+
+
+
+        function clear_style(cell){ // 指定スタイルが無い時に　空のstyle属性を削除する
+            if(!cell.getAttribute('style') || cell.getAttribute('style').trim()===''){
+                cell.removeAttribute('style'); }}
+
+
+        function join_safe(cell){ // 結合セルの非表示セルに style属性適用を抑止する
+            if(cell && getComputedStyle(cell).display!=='none'){
+                return true; }}
+
+    } // edit_table()
+
+
+
+    function remove_t_panel(){
+        document.querySelector('#tcd_panel').remove(); }
+
+
+
+    function remove_mark(){
+        if(document.querySelector('.cke_wysiwyg_frame') !=null){ //「通常表示」から実行開始
+            let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
+            let iframe_doc=editor_iframe.contentWindow.document;
+
+            let item=iframe_doc.querySelectorAll('.tcd_active');
+            for(let k=0; k<item.length; k++){
+                item[k].classList.remove('tcd_active');
+                if(item[k].classList.length===0){
+                    item[k].removeAttribute('class'); }}}}
+
+
+    function remove_mark_cell(){
+        if(document.querySelector('.cke_wysiwyg_frame') !=null){ //「通常表示」から実行開始
+            let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
+            let iframe_doc=editor_iframe.contentWindow.document;
+
+            let item=iframe_doc.querySelectorAll('.cell_active');
+            for(let k=0; k<item.length; k++){
+                item[k].classList.remove('cell_active');
+                if(item[k].classList.length===0){
+                    item[k].removeAttribute('class'); }}}}
+
+
+    function remove_mark_all(){
+        remove_mark();
+        remove_mark_cell(); }
+
+
+
+    function show_first(n){
+        let first=document.querySelector('#tcd_first');
+        let tcd_help1=document.querySelector('.tcd_help1');
+        if(first){
+            if(n==0){
+                first.style.display='none'; }
+            else{
+                first.style.display='block';
+                tcd_help1.style.display='block'; }}
+
+        let tcd_help=document.querySelector('#tcd_help');
+        if(tcd_help){
+            tcd_help.onclick=function(){
+                let url='https://ameblo.jp/personwritep/entry-12842271491.html';
+                window.open(url, target="_blank"); }}}
+
+
+
+    function pick_color(td_){
         let set_color;
         let color_label;
         let icon_button;
@@ -381,7 +768,7 @@ function main(){
                 event.preventDefault();
                 event.stopImmediatePropagation(); // 🟡
                 icon_button.click();
-                monitor_p.observe(target_p, {attributes: true}); }
+                monitor_p.observe(target_p, {attributes: true}); } // カラーパレット
             else if(event.shiftKey==true){
                 event.preventDefault();
                 if(test_colorE(hex_bright(color_input.value))){
@@ -445,6 +832,8 @@ function main(){
             color_input.value='#'+ set_color.toLowerCase();
             sticky_color(color_input);
 
+            td_.style.background=color_input.value; // セルにパレットの選択色を設定
+
             monitor_p.disconnect(); } // カラー取得終了
 
 
@@ -465,319 +854,6 @@ function main(){
 
     function sticky_color(box){
         box.style.boxShadow='inset 17px 0 '+ box.value +', inset 18px 0 #aaa'; }
-
-
-
-    function edit_table(table_, td_){
-        let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
-        let iframe_doc=editor_iframe.contentWindow.document;
-
-        let color_input=document.querySelector('#cell_bg'); // 背景色
-        let padd_t=document.querySelector('#padd_t'); // padding-top
-        let padd_lr=document.querySelector('#padd_lr'); // padding-left/right
-        let padd_b=document.querySelector('#padd_b'); // padding-bottom
-        let cell_fz=document.querySelector('#cell_fz'); // 文字サイズ
-        let cell_lh=document.querySelector('#cell_lh'); // 行間隔
-        let bold=document.querySelector('#bold'); // ボールド
-        let align=document.querySelector('#align'); // 配置
-        let copy_memo=document.querySelector('#copy_memo'); // コピーボタン
-        let paste_memo=document.querySelector('#paste_memo'); // ペーストボタン
-
-        if(task==3){
-            pick_color();
-            memo_td(td_);
-            paste_row_td(td_);
-            paste_col_td(td_);
-            back_to_plain(td_);
-
-            table_.parentNode.style.overflowY='hidden'; // 高さ減少時のスクロールバーを抑止
-
-
-
-            let bg=getComputedStyle(td_).backgroundColor;
-            color_input.value=rgb_hex(bg);
-            sticky_color(color_input);
-            let default_color=color_input.value;
-
-            color_input.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if(event.altKey){
-                    if(color_input.value!=default_color){
-                        td_.style.backgroundColor=color_input.value; }
-                    else{
-                        td_.style.backgroundColor=''; }}}
-
-
-
-            let pt=getComputedStyle(td_).paddingTop;
-            pt=pt.replace('px', '');
-            padd_t.value=Math.round(pt);
-            let default_pt=padd_t.value;
-
-            padd_t.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if(event.altKey){
-                    if(padd_t.value!=default_pt){
-                        td_.style.paddingTop=padd_t.value +'px'; }
-                    else{
-                        td_.style.paddingTop=''; }}}
-
-
-
-            let plr=getComputedStyle(td_).paddingLeft;
-            plr=plr.replace('px', '');
-            padd_lr.value=Math.round(plr);
-            let default_plr=padd_lr.value;
-
-            padd_lr.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if(event.altKey){
-                    if(padd_lr.value!=default_plr){
-                        td_.style.paddingLeft=padd_lr.value +'px';
-                        td_.style.paddingRight=padd_lr.value +'px'; }
-                    else{
-                        td_.style.paddingLeft='';
-                        td_.style.paddingRight=''; }}}
-
-
-
-            let pb=getComputedStyle(td_).paddingBottom;
-            pb=pb.replace('px', '');
-            padd_b.value=Math.round(pb);
-            let default_pb=padd_b.value;
-
-            padd_b.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if(event.altKey){
-                    if(padd_b.value!=default_pb){
-                        td_.style.paddingBottom=padd_b.value +'px'; }
-                    else{
-                        td_.style.paddingBottom=''; }}}
-
-
-
-            let fz=getComputedStyle(td_).fontSize;
-            fz=fz.replace('px', '');
-            cell_fz.value=Math.round(fz);
-            let default_fz=cell_fz.value;
-
-            cell_fz.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if(event.altKey){
-                    if(cell_fz.value!=default_fz){
-                        td_.style.fontSize=cell_fz.value +'px'; }
-                    else{
-                        td_.style.fontSize=''; }}}
-
-
-
-            let lh=getComputedStyle(td_).lineHeight;
-            if(lh=='normal'){
-                lh=fz*(1.5); }
-            else if(lh.indexOf('em')!=-1){
-                lh=lh.replace('em', '');
-                lh=lh*fz; }
-            else if(lh.indexOf('px')!=-1){
-                lh=lh.replace('px', ''); }
-            cell_lh.value=Math.round(lh);
-            let default_lh=cell_lh.value;
-
-            cell_lh.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if(event.altKey){
-                    if(cell_lh.value!=default_lh){
-                        td_.style.lineHeight=cell_lh.value +'px'; }
-                    else{
-                        td_.style.lineHeight=''; }}}
-
-
-
-            let t_bold=getComputedStyle(td_).fontWeight;
-            if(t_bold==400){
-                bold.style.color='#aaa'; }
-            else{
-                bold.style.color='#000'; }
-
-            bold.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                t_bold=getComputedStyle(td_).fontWeight;
-                if(event.altKey){
-                    if(t_bold==400){
-                        td_.style.fontWeight='bold';
-                        bold.style.color='#000'; }
-                    else{
-                        td_.style.fontWeight='';
-                        bold.style.color='#aaa'; }}}
-
-
-
-            let t_align=getComputedStyle(td_).textAlign;
-            if(t_align=='start' || t_align=='left'){
-                align.innerHTML=SVG_align_l; }
-            else if(t_align=='center'){
-                align.innerHTML=SVG_align_c; }
-            else if(t_align=='end' || t_align=='right'){
-                align.innerHTML=SVG_align_r; }
-
-            align.onclick=function(event){
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                t_align=getComputedStyle(td_).textAlign;
-                if(event.altKey){
-                    if(t_align=='start' || t_align=='left'){
-                        td_.style.textAlign='center';
-                        align.innerHTML=SVG_align_c; }
-                    else if(t_align=='center'){
-                        td_.style.textAlign='right';
-                        align.innerHTML=SVG_align_r; }
-                    else if(t_align=='end' || t_align=='right'){
-                        td_.style.textAlign='left';
-                        align.innerHTML=SVG_align_l; }}}
-
-        } // if(task==3)
-
-
-
-        function memo_td(td_){
-            copy_memo.onclick=function(){
-                let yes=window.confirm(
-                    "　🔵 選択したセルの設定をコピーします");
-                if(yes){
-                    let td_style=td_.getAttribute('style');
-                    sessionStorage.setItem('BTCD_style', td_style);
-                    sessionStorage.setItem('BTCD_bg', color_input.value);
-                }} // ストレージ 保存
-
-            paste_memo.onclick=function(event){
-                if(!event.shiftKey){ // 変更値のみ適用
-                    td_.setAttribute('style', sessionStorage.getItem('BTCD_style')); }
-                else{
-                    td_.setAttribute('style', sessionStorage.getItem('BTCD_style'));
-                    color_input.value=sessionStorage.getItem('BTCD_bg');
-                    sticky_color(color_input);
-                    td_.style.background=color_input.value; }} // 背景色の適用を追加
-        } // memo_td()
-
-
-
-        function paste_row_td(td_){
-            let paste_row=document.querySelector('#paste_row'); // 行全体に設定適用
-            paste_row.onclick=function(event){
-                let td_style=td_.getAttribute('style');
-                let bg=getComputedStyle(td_).backgroundColor;
-
-                let td_tr=td_.closest('tr');
-                let td_all=td_tr.querySelectorAll('td');
-
-                if(!event.shiftKey){
-                    for(let k=0; k<td_all.length; k++){
-                        if(join_safe(td_all[k])){ // 結合セルでない条件
-                            td_all[k].setAttribute('style', td_style); }}} // 変更値の適用
-                else{
-                    for(let k=0; k<td_all.length; k++){
-                        if(join_safe(td_all[k])){ // 結合セルでない条件
-                            td_all[k].setAttribute('style', td_style); // 変更値の適用
-                            td_all[k].style.background=bg; }}} // 背景色の適用を追加
-
-            }} //  paste_row_td()
-
-
-
-        function paste_col_td(td_){
-            let paste_col=document.querySelector('#paste_col'); // 列全体に設定適用
-            paste_col.onclick=function(event){
-                let td_style=td_.getAttribute('style');
-                let bg=getComputedStyle(td_).backgroundColor;
-
-                let tr_all=table_.querySelectorAll('tr');
-                let colIndex=td_.cellIndex;
-
-                if(!event.shiftKey){
-                    for(let k=1; k<tr_all.length; k++){
-                        let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
-                        if(col_tr){
-                            if(join_safe(col_tr)){ // 結合セルでない条件
-                                col_tr.setAttribute('style', td_style); }}}} // 変更値の適用
-                else{
-                    for(let k=1; k<tr_all.length; k++){
-                        let col_tr=tr_all[k].querySelectorAll('td')[colIndex];
-                        if(col_tr){
-                            if(join_safe(col_tr)){ // 結合セルでない条件
-                                col_tr.setAttribute('style', td_style); // 変更値の適用
-                                col_tr.style.background=bg; }}}} // 背景色の適用を追加
-
-            }} //  paste_col_td()
-
-
-
-        function back_to_plain(td_){
-            let tcd_plain=document.querySelector('#tcd_plain');
-            tcd_plain.onclick=function(){
-                td_.removeAttribute('style'); }}
-
-
-
-        function join_safe(cell){ // 結合セルの非表示セルに style属性適用を抑止する
-            if(cell && getComputedStyle(cell).display!=='none'){
-                return true; }}
-
-    } // edit_table()
-
-
-
-    function remove_t_panel(){
-        document.querySelector('#tcd_panel').remove(); }
-
-
-
-    function remove_mark(){
-        if(document.querySelector('.cke_wysiwyg_frame') !=null){ //「通常表示」から実行開始
-            let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
-            let iframe_doc=editor_iframe.contentWindow.document;
-
-            let item=iframe_doc.querySelectorAll('.tcd_active');
-            for(let k=0; k<item.length; k++){
-                item[k].classList.remove('tcd_active'); }}}
-
-
-    function remove_mark_cell(){
-        if(document.querySelector('.cke_wysiwyg_frame') !=null){ //「通常表示」から実行開始
-            let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
-            let iframe_doc=editor_iframe.contentWindow.document;
-
-            let item=iframe_doc.querySelectorAll('.cell_active');
-            for(let k=0; k<item.length; k++){
-                item[k].classList.remove('cell_active'); }}}
-
-
-    function remove_mark_all(){
-        remove_mark();
-        remove_mark_cell(); }
-
-
-
-    function show_first(n){
-        let first=document.querySelector('#tcd_first');
-        let tcd_help1=document.querySelector('.tcd_help1');
-        if(first){
-            if(n==0){
-                first.style.display='none'; }
-            else{
-                first.style.display='block';
-                tcd_help1.style.display='block'; }}
-
-        let tcd_help=document.querySelector('#tcd_help');
-        if(tcd_help){
-            tcd_help.onclick=function(){
-                let url='https://ameblo.jp/personwritep/entry-12842271491.html';
-                window.open(url, target="_blank"); }}}
 
 
 
