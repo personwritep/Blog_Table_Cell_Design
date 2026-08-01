@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Blog Table ⭐ Cell Design
 // @namespace        http://tampermonkey.net/
-// @version        0.7
+// @version        0.8
 // @description        個別のtable-cellのデザインを指定する「Ctrl+F3」
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventry*
@@ -48,6 +48,7 @@ function main(){
     let SVG_prow;
     let SVG_pcol;
     let SVG_plain;
+    let SVG_pall;
 
 
     let target=document.getElementById('cke_1_contents'); // 監視 target
@@ -196,6 +197,21 @@ function main(){
             'L158 28C151.9 21.9 146.1 15 139 10z"></path>'+
             '</svg>';
 
+        SVG_pall=
+            '<svg viewBox="0 0 460 256">'+
+            '<path style="fill:  currentColor;" d="M230 10L165 75C153.8 86.2 140.1'+
+            ' 97.1 131 110L203 110L203 149L131 149C140.1 161.9 153.8 172.8 165 18'+
+            '4L230 249C237.1 244 242.9 237.1 249 231L281 199L312 168C318.1 161.9 '+
+            '325 156.1 330 149L258 149L258 110L330 110C325 102.9 318.1 97.1 312 9'+
+            '1L281 60L249 28C242.9 21.9 237.1 15 230 10M99 48L39 108C34 113 29 11'+
+            '7.9 24 123C22.2 124.8 19.2 127.2 19.2 130C19.2 132.8 22.2 135.2 24 1'+
+            '37C28.6 141.7 33.3 146.3 38 151L77 190C84.4 197.4 91.5 206 100 212L1'+
+            '00 97L100 64C100 58.9 101 52.7 99 48M361 48L361 212C369.5 206 376.6 '+
+            '197.4 384 190L423 151C427.7 146.3 432.4 141.7 437 137C438.8 135.2 44'+
+            '1.8 132.8 441.8 130C441.8 127.2 438.8 124.8 437 123C432.4 118.3 427.'+
+            '7 113.7 423 109L384 70C376.6 62.6 369.5 54 361 48z"></path>'+
+            '</svg>';
+
         SVG_plain=
             '<svg viewBox="0 0 24 16">'+
             '<rect x="1" y="1" width="22" height="14" fill="none" stroke="black" '+
@@ -228,16 +244,27 @@ function main(){
             '<span id="tcd_test"></span>'+
 
             '<div id="tcd_first">'+
-            '<span id="tcd_help">？</span>'+
-            '<div class="tcd_help1">'+
-            'デザインを指定するセルを<b>「Ctrl+左Click」</b>で指定してください</div>'+
+            '<span class="announce">'+
+            'デザインを指定するセルを<b>「Ctrl+左Click」</b>で指定してください</span>'+
+            '<span class="tcd_help">？</span>'+
+            '</div>'+
+
+            '<div id="tcd_panel2">'+
+            '<span class="tcd_label2">選択したセルを基準に記入</span>'+
+            '<span id="paste_row2">'+ SVG_prow +'</span>'+
+            '<span id="paste_col2">'+ SVG_pcol +'</span>'+
+            '<span class="tcd_label2">表の全セルに記入</span>'+
+            '<span id="paste_all2">'+ SVG_pall +'</span>'+
+            '<span class="tcd_label2">表の全セルのテキストを削除</span>'+
+            '<span id="tcd_plain2">'+ SVG_plain +'</span>'+
+            '<span class="tcd_help">？</span>'+
             '</div>'+
 
             '<style>'+
-            '#tcd_panel { position: fixed; top: 15px; left: calc(50% - 490px); width: 954px; '+
-            'font-size: 14px; padding: 6px 12px; overflow: hidden; '+
+            '#tcd_panel, #tcd_panel2 { position: fixed; top: 15px; left: calc(50% - 490px); '+
+            'width: 954px; font-size: 14px; padding: 6px 12px; overflow: hidden; '+
             'border: 1px solid #ccc; border-radius: 4px; background: #eff5f6; z-index: 10; }'+
-            '#tcd_panel * { user-select: none; }'+
+            '#tcd_panel *, #tcd_panel2 * { user-select: none; }'+
 
             '#tcd_panel input { position: relative; margin-right: 10px; padding-top: 2px; '+
             'height: 27px; box-sizing: border-box; border: thin solid #aaa; }'+
@@ -245,6 +272,7 @@ function main(){
             '#tcd_panel input[type="number"]:focus, #tcd_panel input[type="submit"]:focus '+
             '{ box-shadow: none; }'+
             '.tcd_label { margin: 0 3px 0 0; }'+
+            '.tcd_label2 { margin: 0 10px 0 20px; }'+
             '.tcd_wpx { position: relative; display: inline-block; }'+
             '.tcd_wpx { margin-right: 10px; }'+
             '.tcd_wpx.pad { margin-right: 0; }'+
@@ -268,28 +296,33 @@ function main(){
             'width: 22px; height: 22px; padding: 2px; outline: 1px solid #aaa; '+
             'border-radius: 3px; background: #000; vertical-align: -8px; cursor: pointer; }'+
 
-            '#paste_row, #paste_col { padding: 3px 2px 2px; outline: 1px solid #aaa; '+
+            '#paste_row, #paste_col , #paste_row2, #paste_col2, #paste_all2 '+
+            '{ padding: 3px 2px 2px; outline: 1px solid #aaa; '+
             'border-radius: 3px; color: #fff; background: #2196F3; cursor: pointer; }'+
             '#paste_row { margin-left: 15px; }'+
             '#paste_col { margin-left: 8px; }'+
-            '#paste_row svg, #paste_col svg { '+
+            '#paste_col2 { margin-left: 10px; }'+
+            '#paste_row svg, #paste_col svg, #paste_row2 svg, #paste_col2 svg { '+
             'width: 28px; height: 24px; vertical-align: -7px; cursor: pointer; }'+
-            '#paste_row:hover, #paste_col:hover { color: #000; background: #fff; }'+
+            '#paste_all2 svg { '+
+            'width: 44px; height: 24px; vertical-align: -7px; cursor: pointer; }'+
+            '#paste_row:hover, #paste_col:hover, #paste_row2:hover, #paste_col2:hover, '+
+            '#paste_all2:hover { color: #000; background: #fff; }'+
 
             '#tcd_plain { margin: 0 -10px 0 15px; }'+
-            '#tcd_plain svg { '+
+            '#tcd_plain svg, #tcd_plain2 svg { '+
             'width: 20px; height: 16px; padding: 5px 4px; outline: 1px solid #aaa; '+
             'border-radius: 2px; background: #fff; vertical-align: -8px; cursor: pointer; }'+
 
             '#bold:hover, #align:hover, #copy_memo:hover, #paste_memo:hover, '+
-            '#tcd_plain:hover { filter: invert(1); }'+
+            '#tcd_plain:hover, #tcd_plain2:hover { filter: invert(1); }'+
 
             '#tcd_first { position: absolute; top: 0; left: 0; color: #fff; background: #2196f3; '+
-            'width: 100%; padding: 10px 0; font-size: 16px; text-align: center; }'+
-            '#tcd_help { position: absolute; top: 11px; right: 25px; padding: 2px 1px 0; '+
-            'line-height: 16px; font-weight: bold; border-radius: 30px; '+
+            'width: 100%; padding: 10px 0; font-size: 16px; }'+
+            '.announce { text-align: left; margin-left: 60px; }'+
+            '.tcd_help { position: absolute; top: 10px; right: 25px; padding: 3px 1px 0; '+
+            'font: bold 18px/16px Meiryo; border: 1px solid #2196f3; border-radius: 30px; '+
             'color: #2196f3; background: #fff; cursor: pointer; }'+
-            '.tcd_help1 { text-align: left; margin-left: 60px; }'+
 
             '#tcd_test { display: none; }'+
             '#cke_42, #cke_43 { top: 60px !important; left: calc( 50% - 45px) !important; }';
@@ -319,7 +352,7 @@ function main(){
         function select(){
             if(document.querySelector('.cke_wysiwyg_frame') !=null){ //「通常表示」から実行開始
                 remove_mark_all(); // Html編集後のリセット
-                show_first(1);
+                show_first(0);
                 let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
                 let iframe_doc=editor_iframe.contentWindow.document;
                 if(iframe_doc){
@@ -345,7 +378,7 @@ function main(){
                                         let table_=elm.closest('table');
                                         if(table_.id && table_.id.includes('ambt')){
                                             table_.parentNode.classList.add('tcd_active');
-                                            show_first(0);
+                                            show_first(1);
                                             task=3;
                                             let td_=elm.closest('td');
                                             td_.classList.add('cell_active');
@@ -353,6 +386,24 @@ function main(){
                                         else{
                                             remove_mark(); } //「選択終了」
                                     }}}
+
+                            if(event.altKey){
+                                remove_mark_all();
+                                if(task==1 || task==3){
+                                    let elm=iframe_doc.elementFromPoint(event.clientX, event.clientY);
+                                    if(elm.closest('table')!=null){
+                                        let table_=elm.closest('table');
+                                        if(table_.id && table_.id.includes('ambt')){
+                                            table_.parentNode.classList.add('tcd_active');
+                                            show_first(2);
+                                            task=3;
+                                            let td_=elm.closest('td');
+                                            td_.classList.add('cell_active');
+                                            edit_table2(table_, td_); } // セルにナンバー記入
+                                        else{
+                                            remove_mark(); } //「選択終了」
+                                    }}}
+
                         }}}}} // select()
 
     } // enhanced()
@@ -380,6 +431,7 @@ function main(){
             paste_row_td(td_);
             paste_col_td(td_);
             back_to_plain(td_);
+
 
             table_.parentNode.style.overflowY='hidden'; // 高さ減少時のスクロールバーを抑止
 
@@ -672,18 +724,128 @@ function main(){
 
             }} // back_to_plain()
 
-
-
-        function clear_style(cell){ // 指定スタイルが無い時に　空のstyle属性を削除する
-            if(!cell.getAttribute('style') || cell.getAttribute('style').trim()===''){
-                cell.removeAttribute('style'); }}
-
-
-        function join_safe(cell){ // 結合セルの非表示セルに style属性適用を抑止する
-            if(cell && getComputedStyle(cell).display!=='none'){
-                return true; }}
-
     } // edit_table()
+
+
+
+    function edit_table2(table_, td_){
+
+        if(task==3){
+            paste_row_td2(td_);
+            paste_col_td2(td_);
+            paste_all_td2(table_);
+            back_to_plain2(table_);
+
+        } // task==3
+
+
+
+        function paste_row_td2(td_){
+            let paste_row2=document.querySelector('#paste_row2'); // 行全体にセルナンバーを記入
+            paste_row2.onclick=function(event){
+
+                let rowIndex=td_.parentElement.rowIndex;
+                let td_all=td_.closest('tr').querySelectorAll('td');
+                let pre_tx=td_.textContent;
+                if(pre_tx){
+                    pre_tx=pre_tx.replace(/^.*?\d+/, ''); // 前方の数字以降を取り出す
+                    pre_tx=pre_tx.trim(); } // 前後の空白を削除
+
+                if(!event.shiftKey){
+                    for(let k=0; k<td_all.length; k++){
+                        if(join_safe(td_all[k])){ // 結合セルでない条件
+                            let alphabet=String.fromCharCode(65 + k);
+                            td_all[k].textContent=alphabet + (rowIndex-1); }}}
+                else{
+                    for(let k=0; k<td_all.length; k++){
+                        if(join_safe(td_all[k])){ // 結合セルでない条件
+                            if(pre_tx){
+                                let alphabet=String.fromCharCode(65 + k);
+                                td_all[k].textContent=alphabet + (rowIndex-1) +' '+ pre_tx; }}}}
+
+            }} // paste_row_td2()
+
+
+
+        function paste_col_td2(td_){
+            let paste_col2=document.querySelector('#paste_col2'); // 列全体にセルナンバーを記入
+            paste_col2.onclick=function(event){
+
+                let colIndex=td_.cellIndex;
+                let alphabet=String.fromCharCode(65 + colIndex);
+                let tr_all=table_.querySelectorAll('tr');
+                let pre_tx=td_.textContent;
+                if(pre_tx){
+                    pre_tx=pre_tx.replace(/^.*?\d+/, ''); // 前方の数字以降を取り出す
+                    pre_tx=pre_tx.trim(); } // 前後の空白を削除
+
+                if(!event.shiftKey){
+                    for(let k=1; k<tr_all.length; k++){ // k=0 は theadを壊すので省く
+                        let col_td=tr_all[k].querySelectorAll('td')[colIndex];
+                        if(col_td){
+                            if(join_safe(col_td)){ // 結合セルでない条件
+                                let rowIndex=col_td.parentElement.rowIndex;
+                                col_td.textContent=alphabet + (rowIndex-1); }}}}
+                else{
+                    for(let k=1; k<tr_all.length; k++){ // k=0 は theadを壊すので省く
+                        let col_td=tr_all[k].querySelectorAll('td')[colIndex];
+                        if(col_td){
+                            if(join_safe(col_td)){ // 結合セルでない条件
+                                if(pre_tx){
+                                    let rowIndex=col_td.parentElement.rowIndex;
+                                    col_td.textContent=alphabet + (rowIndex-1) +' '+ pre_tx; }}}}}
+
+            }} // paste_col_td2()
+
+
+
+        function paste_all_td2(table_){
+            let paste_all2=document.querySelector('#paste_all2'); // 表全体にセルナンバーを記入
+            paste_all2.onclick=function(){
+                let yes=window.confirm(
+                    "　🔴　表の全てのセルに記入されたテキストデータを上書きします　\n"+
+                    "　　　 「OK」を押すとセルナンバーの書込みを実行します");
+                if(yes){
+                    let tr_all=table_.querySelectorAll('tr');
+                    for(let k=1; k<tr_all.length; k++){ // k=0 は theadを壊すので省く
+                        let td_all=tr_all[k].querySelectorAll('td');
+                        for(let i=0; i<td_all.length; i++){
+                            let alphabet=String.fromCharCode(65 + i);
+                            td_all[i].textContent=alphabet + (k-1); }}}
+
+            }} // paste_all_td2()
+
+
+
+        function back_to_plain2(table_){
+            let tcd_plain2=document.querySelector('#tcd_plain2');
+            tcd_plain2.onclick=function(){
+
+                let yes=window.confirm(
+                    "　🔴　表の全てのセルに記入されたテキストデータを削除します　\n"+
+                    "　　　 「OK」を押すと削除を実行します");
+                if(yes){
+                    let tr_all=table_.querySelectorAll('tr');
+                    for(let k=1; k<tr_all.length; k++){ // k=0 は theadを壊すので省く
+                        let td_all=tr_all[k].querySelectorAll('td');
+                        for(let i=0; i<td_all.length; i++){
+                            td_all[i].textContent=''; }}}
+
+            }} // back_to_plain2()
+
+    } // edit_table2()
+
+
+
+    function clear_style(cell){ // 指定スタイルが無い時に　空のstyle属性を削除する
+        if(!cell.getAttribute('style') || cell.getAttribute('style').trim()===''){
+            cell.removeAttribute('style'); }}
+
+
+
+    function join_safe(cell){ // 結合セルの非表示セルに style属性適用を抑止する
+        if(cell && getComputedStyle(cell).display!=='none'){
+            return true; }}
 
 
 
@@ -704,6 +866,7 @@ function main(){
                     item[k].removeAttribute('class'); }}}}
 
 
+
     function remove_mark_cell(){
         if(document.querySelector('.cke_wysiwyg_frame') !=null){ //「通常表示」から実行開始
             let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
@@ -716,6 +879,7 @@ function main(){
                     item[k].removeAttribute('class'); }}}}
 
 
+
     function remove_mark_all(){
         remove_mark();
         remove_mark_cell(); }
@@ -724,19 +888,27 @@ function main(){
 
     function show_first(n){
         let first=document.querySelector('#tcd_first');
-        let tcd_help1=document.querySelector('.tcd_help1');
-        if(first){
-            if(n==0){
-                first.style.display='none'; }
-            else{
-                first.style.display='block';
-                tcd_help1.style.display='block'; }}
+        let tcd_panel2=document.querySelector('#tcd_panel2');
 
-        let tcd_help=document.querySelector('#tcd_help');
-        if(tcd_help){
-            tcd_help.onclick=function(){
-                let url='https://ameblo.jp/personwritep/entry-12842271491.html';
-                window.open(url, target="_blank"); }}}
+        if(first && tcd_panel2){
+            if(n==0){
+                first.style.display='block';
+                tcd_panel2.style.display='none'; }
+            else if(n==1){
+                first.style.display='none';
+                tcd_panel2.style.display='none'; }
+            else if(n==2){
+                first.style.display='none';
+                tcd_panel2.style.display='block'; }}
+
+        let tcd_help=document.querySelectorAll('.tcd_help');
+        if(tcd_help.length==2){
+            tcd_help.forEach(button=>{
+                button.onclick=function(){
+                    let url='https://ameblo.jp/personwritep/entry-12842271491.html';
+                    window.open(url, target="_blank"); }})}
+
+    } // show_first()
 
 
 
