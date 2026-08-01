@@ -906,7 +906,7 @@ function main(){
             tcd_help.forEach(button=>{
                 button.onclick=function(){
                     let url='https://ameblo.jp/personwritep/entry-12842271491.html';
-                    window.open(url, target="_blank"); }})}
+                    window.open(url, target="_blank"); }}); }
 
     } // show_first()
 
